@@ -1,6 +1,5 @@
 use burn::record::CompactRecorder;
 use std::time::Instant;
-use burn::data::dataloader::DataLoader;
 use burn::backend::Autodiff;
 use burn::train::StoppingCondition;
 use burn::train::metric::store::Split;
@@ -193,7 +192,9 @@ pub fn run_train<B:AutodiffBackend>(device:&B::Device){
 
 
     //make a fresh result dir
-    std::fs::remove_dir_all(ARTIFACT_DIR).unwrap();
+    if let Err(e) = std::fs::remove_dir_all(ARTIFACT_DIR) {
+        eprintln!("could not remove old artifact {ARTIFACT_DIR} because {e}");
+    }
     std::fs::create_dir_all(ARTIFACT_DIR).unwrap();
 
     let learner = LearnerBuilder::new(ARTIFACT_DIR)
@@ -206,7 +207,7 @@ pub fn run_train<B:AutodiffBackend>(device:&B::Device){
             Split::Valid,
             StoppingCondition::NoImprovementSince { n_epochs: 5 },
         ))
-        .num_epochs(4)
+        .num_epochs(500)
         .summary()
         .build(
             model,
