@@ -36,7 +36,7 @@ use burn::{
 
 pub const INPUT_SIZE : usize = 3;
 pub const BATCH_SIZE : usize = 32;
-pub const ARTIFACT_DIR:&'static str = "train_output";
+pub const ARTIFACT_DIR:&'static str = "training_output";
 
 #[derive(Debug,Clone)]
 pub struct DataSample {
